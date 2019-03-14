@@ -18,7 +18,7 @@ char movement;
 int fillNumCol = 0;
 int fillNumRow = 1;
 char fill_char = '=';
-char fill_char2 = '#';
+char fill_char2 = 'O';
 
 
 
@@ -78,15 +78,15 @@ void displayBoard(char board[Row][Col]){
 
 //Generates random locations for the game objects
 void charLocGen(char board[Row][Col], int diff, int rowB, int colB){
-    
+
     int mineNum;
     int i = 0;
     int j = 0;
-    
+
 
     i = rand() % 12 + 1;
     j = rand() % 12 + 1;
-    
+
     int mx, my;
     switch (diff){
         case 1:
@@ -95,21 +95,29 @@ void charLocGen(char board[Row][Col], int diff, int rowB, int colB){
         case 2:
         {mineNum = 40;
             break;}
-            
+
         case 3:
         {mineNum = 100;
             break;}
         default:
         {mineNum = 10;
             break;}
-            
+
     }
-    for (int t = 1; t <= mineNum; ++t){
+    for (int t = 0; t <= mineNum; ++t){
+        int tempX;
+        int tempY;
         do {
-            mx = rand()%rowB;
-            my = rand()%colB;
-            board[mx][my] = 'M';
-        }while((mx==i) && (my==j));
+            int itr = 0;
+
+            if (itr > 0){
+                int tempX = mx;
+                int tempY = my;
+            }
+            mx = rand()%(rowB - 1) + 1;
+            my = rand()%(colB - 1) + 1;
+            board[mx][my] = '*';
+        }while((mx==i) && (my==j) && (mx == tempX) && (mx = tempY));
     }
     board[i][j] = Player;
     //Player = board[i][j];
@@ -202,13 +210,13 @@ void gameMenu(){
             }
         }
     }
-    
+
 }
 
 /*
 void mineGen(int diff, int& mx, int& my){
-    
-    
+
+
 }
 
 void mineGenerator_easy() {
@@ -243,14 +251,14 @@ void minePlacer(char board[Row][Col], int num) {
 int main()
 {
     srand(time(NULL));
-    
+
     gameMenu();
     int diff;
     int mx;
     int my;
     char num;
-    
-    
+
+
     displayBoard(board);
     return 0;
 }
