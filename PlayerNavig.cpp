@@ -4,9 +4,6 @@
 #include <ctime>
 #include <cmath>
 
-
-
-
 using namespace std;
 
 const int Row = 16;
@@ -80,14 +77,42 @@ void displayBoard(char board[Row][Col]){
 //Displays the board with limited game objects
 
 //Generates random locations for the game objects
-void charLocGen(char board[Row][Col]){
+void charLocGen(char board[Row][Col], int diff, int rowB, int colB){
+    
+    int mineNum;
     int i = 0;
     int j = 0;
-        i = rand() % 12 + 1;
-        j = rand() % 12 + 1;
+    
 
-        board[i][j] = Player;
-        Player = board[i][j];
+    i = rand() % 12 + 1;
+    j = rand() % 12 + 1;
+    
+    int mx, my;
+    switch (diff){
+        case 1:
+        {mineNum = 10;
+            break;}
+        case 2:
+        {mineNum = 40;
+            break;}
+            
+        case 3:
+        {mineNum = 100;
+            break;}
+        default:
+        {mineNum = 10;
+            break;}
+            
+    }
+    for (int t = 1; t <= mineNum; ++t){
+        do {
+            mx = rand()%rowB;
+            my = rand()%colB;
+            board[mx][my] = 'M';
+        }while((mx==i) && (my==j));
+    }
+    board[i][j] = Player;
+    //Player = board[i][j];
 }
 
 //User interface to navigate around the given space
@@ -129,9 +154,12 @@ void PlayerControls(char board[Row][Col]){
 
 //The main pipeline for the flow of game
 void theGame(){
+    int diff;
     while ((movement != 'q')){
            initBoard(board, fill_char);
-           charLocGen(board);
+        cout<<"Enter Difficulty (1, 2, 3)"<<endl;
+        cin>>diff;
+           charLocGen(board, diff, Row, Col);
            displayBoard(board);
 
            cout<<endl<<"Use w,a,s,d to move around."<<endl<<"'q' to quit"<<endl;
@@ -147,8 +175,6 @@ void theGame(){
         }
 
 }
-
-
 
 
 //Displays the game menu having interactable options
@@ -176,14 +202,55 @@ void gameMenu(){
             }
         }
     }
+    
+}
 
+/*
+void mineGen(int diff, int& mx, int& my){
+    
+    
+}
 
+void mineGenerator_easy() {
+    int mx = rand()%10;
+    int my = rand()%10;
+}
+
+void mineGenerator_medium() {
+    int mx = rand()%40;
+    int my = rand()%40;
+}
+
+void mineGenerator_hard() {
+    int mx = rand()%99;
+    int my = rand()%99;
 }
 
 
+void minePlacer(char board[Row][Col], int num) {
+    for(int i=0;i<Row;i++) {
+        for(int j=0;j<Col;j++) {
+            board[i][j] = rand()%10;
+        }
+    }
+    for(int i=0;i<Row;i++) {
+        for(int j=0;j<Col;j++) {
+            cout<<board[i][j];
+        }
+    }
+}
+*/
 int main()
 {
     srand(time(NULL));
+    
     gameMenu();
+    int diff;
+    int mx;
+    int my;
+    char num;
+    
+    
+    displayBoard(board);
     return 0;
 }
