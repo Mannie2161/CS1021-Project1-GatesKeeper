@@ -6,15 +6,15 @@
 
 using namespace std;
 
-const int Row = 16;
-const int Col = 16;
+int Row = 16;
+int Col = 16;
 char board[Row][Col];
 char Player = '_';
 
 int playerCurrLocRow;
 int playerCurrLocCol;
 
-char movement;
+
 int fillNumCol = 0;
 int fillNumRow = 1;
 char fill_char = '=';
@@ -90,18 +90,18 @@ void charLocGen(char board[Row][Col], int diff, int rowB, int colB){
     int mx, my;
     switch (diff){
         case 1:
-        {mineNum = 10;
-            break;}
+            mineNum = 10;
+            break;
         case 2:
-        {mineNum = 40;
-            break;}
+            mineNum = 40;
+            break;
 
         case 3:
-        {mineNum = 100;
-            break;}
+            mineNum = 99;
+            break;
         default:
-        {mineNum = 10;
-            break;}
+            mineNum = 10;
+            break;
 
     }
     for (int t = 0; t <= mineNum; ++t){
@@ -124,7 +124,7 @@ void charLocGen(char board[Row][Col], int diff, int rowB, int colB){
 }
 
 //User interface to navigate around the given space
-void PlayerControls(char board[Row][Col]){
+void PlayerControls(char board[Row][Col], char movement){
 
         switch (movement){
 
@@ -161,8 +161,9 @@ void PlayerControls(char board[Row][Col]){
 }
 
 //The main pipeline for the flow of game
-void theGame(){
+char theGame(){
     int diff;
+    char movement;
     while ((movement != 'q')){
            initBoard(board, fill_char);
         cout<<"Enter Difficulty (1, 2, 3)"<<endl;
@@ -174,23 +175,52 @@ void theGame(){
 
            while (movement != 'q'){
             cin>>movement;
-            PlayerControls(board);
+            PlayerControls(board, movement);
             system("CLS");
             displayBoard(board);
 
             }
 
         }
+    return movement;
 
 }
 
+void chooseDiff(){
+    int selection;
+    int side;
+    int mineNum;
+    cout<<"Choose Difficulty: "<<endl<<"1. Easy"<<endl<<"2. Hard"<<endl<<"3. Nightmare"<<endl;
+    cin>>selection;
+    while (selection < 1 || selection > 3){
+        cout<<"Please select a valid option."<<endl;
+        cin>>selection;
+    }
+
+    switch (selection){
+    case 1:
+        side = 10;
+        mineNum = 10;
+        break;
+    case 2:
+        side = 17;
+        mineNum = 40;
+        break;
+    case 3:
+        side = 25;
+        mineNum = 99;
+        break;
+    }
+
+
+}
 
 //Displays the game menu having interactable options
 void gameMenu(){
 
     int userInput = 0;
     cout<<"1. START GAME"<<endl<<"2. INFO"<<endl<<"3. CREDITS"<<endl<<"4. Quit"<<endl<<endl;
-
+    char movement = theGame();
 
     while (userInput != 4){
         cin>>userInput;
