@@ -38,13 +38,13 @@ void chooseDiff(int& side, int& mineNum){
     Props.at(0) = side;
     side = const_cast<int&>(side);
     Props.at(1) = mineNum;
-    mineNum = const_cast<int&>(side);
+    mineNum = const_cast<int&>(mineNum);
 
     board[side][side];
 
  }
 
-char** initBoard( int side, char** board, char fill_char2 ){
+char** initBoard( int side, char**& board, char fill_char2 ){
 
     for(int r = 0; r < side; r++) {
              for(int c = 0; c < side; c++) {
@@ -55,7 +55,7 @@ char** initBoard( int side, char** board, char fill_char2 ){
 }
 
 //Displays the full board to the user
-char** displayBoard( int side, char** board, char Player, int& playerCurrLocRow, int& playerCurrLocCol){
+char** displayBoard( int side, char**& board, char Player, int& playerCurrLocRow, int& playerCurrLocCol){
     int fillNumCol = 0;
     int fillNumRow = 1;
     for(int r = 0; r < side; r++) {
@@ -83,10 +83,10 @@ char** displayBoard( int side, char** board, char Player, int& playerCurrLocRow,
                  else{
                   cout<<board[r][c]<<"  ";
                  }
-                  if (board[r][c] == Player){
+                  /*if (board[r][c] == Player){
                       playerCurrLocRow = r;
                       playerCurrLocCol = c;
-                  }
+                  }*/
              }
              if (r == 0){
                  cout<<endl;
@@ -96,13 +96,14 @@ char** displayBoard( int side, char** board, char Player, int& playerCurrLocRow,
  return board;
 }
 //Displays the board with limited game objects
-char** hiddenDisplayBoard( int side, char** board, char Player, int& playerCurrLocRow, int& playerCurrLocCol, char fill_char2){
+char** hiddenDisplayBoard( int side, char**& hiddenBoard, char Player, int& hiddenPlayerCurrLocRow, int& hiddenPlayerCurrLocCol, char fill_char2){
     int fillNumCol = 0;
     int fillNumRow = 1;
+
     for(int r = 0; r < side; r++) {
              for(int c  = 0; c < side; c++) {
-                 if (board[r][c] == Player){
-                     cout<<board[r][c]<<"  ";
+                 if (hiddenBoard[r][c] == Player){
+                     cout<<hiddenBoard[r][c]<<"  ";
                  }
                  else if (c == 0){
                     cout<<fillNumCol;
@@ -127,9 +128,9 @@ char** hiddenDisplayBoard( int side, char** board, char Player, int& playerCurrL
                  else{
                   cout<<fill_char2<<"  ";
                  }
-                  if (board[r][c] == Player){
-                      playerCurrLocRow = r;
-                      playerCurrLocCol = c;
+                  if (hiddenBoard[r][c] == Player){
+                      hiddenPlayerCurrLocRow = r;
+                      hiddenPlayerCurrLocCol = c;
                   }
              }
              if (r == 0){
@@ -137,42 +138,17 @@ char** hiddenDisplayBoard( int side, char** board, char Player, int& playerCurrL
              }
              cout<<endl;
         }
- return board;
+ return hiddenBoard;
 }
 
 
 //Generates random locations for the game objects
-char** charLocGen(int side, char** board, int mineNum, char Player){
-
-
-    int i = 0;
-    int j = 0;
-
-
-    i = rand() % 12 + 1;
-    j = rand() % 12 + 1;
-
+void mineGen(int side, char**& board, int mineNum){
     int mx, my;
-
-    /*switch (diff){
-        case 1:
-            mineNum = 10;
-            break;
-        case 2:
-            mineNum = 40;
-            break;
-
-        case 3:
-            mineNum = 99;
-            break;
-        default:
-            mineNum = 10;
-            break;
-
-    }*/
-    for (int t = 0; t <= mineNum; ++t){
-        int tempX;
-        int tempY;
+    cout<<endl<<endl<<mineNum<<endl<<endl;
+    for (int t = 0; t < mineNum; ++t){
+          int tempX;
+          int tempY;
         do {
             int itr = 0;
 
@@ -180,60 +156,121 @@ char** charLocGen(int side, char** board, int mineNum, char Player){
                 int tempX = mx;
                 int tempY = my;
             }
-            mx = rand()%(side - 2) + 2;
-            my = rand()%(side - 2) + 2;
+            mx = rand()%(side - 1)+ 1;
+            my = rand()%(side - 1)+ 1;
             board[mx][my] = '*';
-            for (int x = (mx - 1); x <= (mx + 1); ++x) {
-                for (int y = (my - 1); y <= (my + 1) ;++y) {
-                    if (/*(x != mx && y != my) */board[x][y] != '*'){
-                    if (board[x][y] >= '0' && board[x][y] <= '9'){
-                        board[x][y] += 1;
-                        }
+            /*if (mx > 1 && mx < side - 1 && my > 1 && my < side - 1){
+            for (int k = mx - 1; k <= mx + 1; ++k) {
+                for (int l = my - 1; l <= my + 1; ++l) {
+                    if (board[k][l] != '*'){
+                        if (k > 0 && k < side && l > 0 && l < side)
+                        board[k][l] += 1;
                     }
                 }
             }
-        }while((mx==i) && (my==j) && (mx == tempX) && (mx = tempY));
+            }*/
+
+            ++itr;
+        }while(/*(mx==i) && (my==j) && */board[tempX][tempY] == '*');
     }
-
-
-    //board[i][j] = Player;
-    //Player = board[i][j];
-    return board;
+    //return board;
 }
 
+void numGen(int side, char**& board){
+    for (int i = 1; i < side; ++i) {
+        for (int j = 1; j < side; ++j) {
+            if (board[i][j] == '*'){
+                if (i - 1 >= 1){
+                    if (board[i - 1][j] != '*'){
+                    board[i - 1][j] += 1;
+                    }
+                    if ((j + 1 < side)&&(board[i - 1][j + 1] != '*')){
+                    board[i - 1][j + 1] += 1;
+                    }
+                    if ((j - 1 >= 1)&&(board[i - 1][j - 1] != '*')){
+                    board[i - 1][j - 1] += 1;
+                    }
+                }
+                if (j - 1 >= 1){
+                    if (board[i][j - 1] != '*'){
+                    board[i][j - 1] += 1;
+                    }
+                    if ((i + 1 < side )&&(board[i + 1][j - 1] != '*')){
+                    board[i + 1][j - 1] += 1;
+                    }
+
+                }
+                if (i + 1 < side){
+                    if (board[i + 1][j] != '*'){
+                    board[i + 1][j] += 1;
+                    }
+                    if ((j + 1 < side)&&(board[i + 1][j + 1] != '*')){
+                    board[i + 1][j + 1] += 1;
+                    }
+                }
+                if (j + 1 < side){
+                    if (board[i][j + 1] != '*'){
+                    board[i][j + 1] += 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 //User interface to navigate around the given space
-char** PlayerControls(char** board, char movement, char Player, char fill_char2, int& playerCurrLocRow, int& playerCurrLocCol){
-        char temp;
+void PlayerControls(char**& hiddenBoard, int side, char movement, char Player, char fill_char2, int& playerCurrLocRow, int& playerCurrLocCol){
+        //char temp;
         switch (movement){
 
 
 
         case 'a':
-            temp = board[playerCurrLocRow][playerCurrLocCol-1];
-            board[playerCurrLocRow][playerCurrLocCol] = fill_char2;
+            //temp = board[playerCurrLocRow][playerCurrLocCol-1];
+            if (playerCurrLocCol > 1){
+            hiddenBoard[playerCurrLocRow][playerCurrLocCol] = fill_char2;
             playerCurrLocCol -= 1;
-            board[playerCurrLocRow][playerCurrLocCol] = Player;
+            hiddenBoard[playerCurrLocRow][playerCurrLocCol] = Player;
+            }
+            else{
+                cout<<endl<<"You cannot select from further left"<<endl;
+            }
 
             break;
         case 'd':
-            temp = board[playerCurrLocRow][playerCurrLocCol+1];
-            board[playerCurrLocRow][playerCurrLocCol] = fill_char2;
+            //temp = board[playerCurrLocRow][playerCurrLocCol+1];
+            if (playerCurrLocCol < side - 1){
+            hiddenBoard[playerCurrLocRow][playerCurrLocCol] = fill_char2;
             playerCurrLocCol += 1;
-            board[playerCurrLocRow][playerCurrLocCol] = Player;
-
+            hiddenBoard[playerCurrLocRow][playerCurrLocCol] = Player;
+            }
+            else{
+                cout<<endl<<"You cannot select from further right"<<endl;
+            }
             break;
         case 'w':
-            temp = board[playerCurrLocRow-1][playerCurrLocCol];
-            board[playerCurrLocRow][playerCurrLocCol]= fill_char2;
+            //temp = board[playerCurrLocRow-1][playerCurrLocCol];
+            if (playerCurrLocRow > 1){
+            hiddenBoard[playerCurrLocRow][playerCurrLocCol]= fill_char2;
             playerCurrLocRow -= 1;
-            board[playerCurrLocRow][playerCurrLocCol] = Player;
+            hiddenBoard[playerCurrLocRow][playerCurrLocCol] = Player;
+            }
+            else{
+                cout<<endl<<"You cannot select from further upwards"<<endl;
+            }
 
             break;
         case 's':
-            temp = board[playerCurrLocRow+1][playerCurrLocCol];
-            board[playerCurrLocRow][playerCurrLocCol] = fill_char2;
+            //temp = board[playerCurrLocRow+1][playerCurrLocCol];
+            if (playerCurrLocRow < side - 1){
+            hiddenBoard[playerCurrLocRow][playerCurrLocCol] = fill_char2;
             playerCurrLocRow += 1;
-            board[playerCurrLocRow][playerCurrLocCol] = Player;
+            hiddenBoard[playerCurrLocRow][playerCurrLocCol] = Player;
+            }
+            else{
+                cout<<endl<<"You cannot select from further downwards"<<endl;
+            }
 
             break;
         default:
@@ -242,7 +279,7 @@ char** PlayerControls(char** board, char movement, char Player, char fill_char2,
 
     }
     cout<<endl<<endl;
-    return board;
+    //return board;
 }
 
 
@@ -251,17 +288,28 @@ char** PlayerControls(char** board, char movement, char Player, char fill_char2,
 char theGame(){
     int playerCurrLocRow;
     int playerCurrLocCol;
+    int hiddenPlayerCurrLocRow;
+    int hiddenPlayerCurrLocCol;
     int diff;
     int side = 0;
     int mineNum = 0;
     chooseDiff(side, mineNum);
-    diff = mineNum;
+
     char Player = '_';
     vector<int>Props(2);
     char** board = new char*[side];
     for (int var = 0; var < side; ++var) {
         board[var] = new char [side];
     }
+    char** hiddenBoard = new char*[side];
+    for (int var = 0; var < side; ++var) {
+        hiddenBoard[var] = new char [side];
+    }
+    int px = rand()%(8) + 1;
+    int py = rand()%(8) + 1;
+    hiddenBoard[px][py] = Player;
+    hiddenPlayerCurrLocRow = px;
+    hiddenPlayerCurrLocCol = py;
     char fill_char2 = 'X';
 
 
@@ -273,10 +321,11 @@ char theGame(){
            initBoard(side, board, fill_char2);
 
 
-           charLocGen(side, board, mineNum, Player);
-           displayBoard(side, board, Player, playerCurrLocRow, playerCurrLocCol);
+           mineGen(side, board, mineNum);
+           numGen(side, board);
+           displayBoard(side, board, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
            cout<<endl<<endl;
-           hiddenDisplayBoard(side, board, Player, playerCurrLocRow, playerCurrLocCol, fill_char2);
+           hiddenDisplayBoard(side, hiddenBoard, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol, fill_char2);
 
            cout<<endl<<"Use w,a,s,d to move around."<<endl<<"'q' to quit"<<endl;
 
@@ -284,11 +333,12 @@ char theGame(){
             movement = _getch();
 
             //cin>>movement;
-            PlayerControls(board, movement, Player, fill_char2, playerCurrLocRow, playerCurrLocCol);
+            PlayerControls(hiddenBoard, side, movement, Player, fill_char2, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
             system("CLS");
-            displayBoard(side, board, Player, playerCurrLocRow, playerCurrLocCol);
+            displayBoard(side, board, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
             cout<<endl<<"w, a, s, d to move around and q to quit"<<endl;
-            hiddenDisplayBoard(side, board, Player, playerCurrLocRow, playerCurrLocCol, fill_char2);
+            hiddenDisplayBoard(side, hiddenBoard, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol, fill_char2);
+            cout<<endl<<"Your Current Location: ("<<hiddenPlayerCurrLocRow<<", "<<hiddenPlayerCurrLocCol<<")"<<endl;
             }
 
         }
