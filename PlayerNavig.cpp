@@ -96,13 +96,16 @@ char** displayBoard( int side, char**& board, char Player, int& playerCurrLocRow
  return board;
 }
 //Displays the board with limited game objects
-char** hiddenDisplayBoard( int side, char**& hiddenBoard, char Player, int& hiddenPlayerCurrLocRow, int& hiddenPlayerCurrLocCol, char fill_char2){
+char** hiddenDisplayBoard( int side, bool& flag, char**& hiddenBoard, char Player, int& hiddenPlayerCurrLocRow, int& hiddenPlayerCurrLocCol, char fill_char2){
     int fillNumCol = 0;
     int fillNumRow = 1;
 
     for(int r = 0; r < side; r++) {
              for(int c  = 0; c < side; c++) {
                  if (hiddenBoard[r][c] == Player){
+                     cout<<hiddenBoard[r][c]<<"  ";
+                 }
+                 else  if(flag == 1 && hiddenBoard[r][c] == 'P'){
                      cout<<hiddenBoard[r][c]<<"  ";
                  }
                  else if (c == 0){
@@ -176,10 +179,11 @@ void mineGen(int side, char**& board, int mineNum){
     //return board;
 }
 
-void numGen(int side, char**& board){
+void numGen(int side, char**& board, int& numMines){
     for (int i = 1; i < side; ++i) {
         for (int j = 1; j < side; ++j) {
             if (board[i][j] == '*'){
+                numMines += 1;
                 if (i - 1 >= 1){
                     if (board[i - 1][j] != '*'){
                     board[i - 1][j] += 1;
@@ -220,7 +224,7 @@ void numGen(int side, char**& board){
 
 
 //User interface to navigate around the given space
-void PlayerControls(char**& hiddenBoard, int side, char movement, char Player, char fill_char2, int& playerCurrLocRow, int& playerCurrLocCol){
+void PlayerControls(char**& hiddenBoard, char**& board, int& minesFlag, bool& flag, int side, char& movement, char Player, char fill_char2, int& playerCurrLocRow, int& playerCurrLocCol){
         //char temp;
         switch (movement){
 
@@ -229,9 +233,13 @@ void PlayerControls(char**& hiddenBoard, int side, char movement, char Player, c
         case 'a':
             //temp = board[playerCurrLocRow][playerCurrLocCol-1];
             if (playerCurrLocCol > 1){
-            hiddenBoard[playerCurrLocRow][playerCurrLocCol] = fill_char2;
+                if (hiddenBoard[playerCurrLocRow][playerCurrLocCol] != 'P'){
+                hiddenBoard[playerCurrLocRow][playerCurrLocCol] = fill_char2;
+                }
             playerCurrLocCol -= 1;
+            if (hiddenBoard[playerCurrLocRow][playerCurrLocCol] != 'P'){
             hiddenBoard[playerCurrLocRow][playerCurrLocCol] = Player;
+            }
             }
             else{
                 cout<<endl<<"You cannot select from further left"<<endl;
@@ -241,9 +249,13 @@ void PlayerControls(char**& hiddenBoard, int side, char movement, char Player, c
         case 'd':
             //temp = board[playerCurrLocRow][playerCurrLocCol+1];
             if (playerCurrLocCol < side - 1){
-            hiddenBoard[playerCurrLocRow][playerCurrLocCol] = fill_char2;
+                if (hiddenBoard[playerCurrLocRow][playerCurrLocCol] != 'P'){
+                hiddenBoard[playerCurrLocRow][playerCurrLocCol] = fill_char2;
+                }
             playerCurrLocCol += 1;
+            if (hiddenBoard[playerCurrLocRow][playerCurrLocCol] != 'P'){
             hiddenBoard[playerCurrLocRow][playerCurrLocCol] = Player;
+            }
             }
             else{
                 cout<<endl<<"You cannot select from further right"<<endl;
@@ -252,9 +264,13 @@ void PlayerControls(char**& hiddenBoard, int side, char movement, char Player, c
         case 'w':
             //temp = board[playerCurrLocRow-1][playerCurrLocCol];
             if (playerCurrLocRow > 1){
-            hiddenBoard[playerCurrLocRow][playerCurrLocCol]= fill_char2;
+                if (hiddenBoard[playerCurrLocRow][playerCurrLocCol] != 'P'){
+                hiddenBoard[playerCurrLocRow][playerCurrLocCol]= fill_char2;
+                }
             playerCurrLocRow -= 1;
+            if (hiddenBoard[playerCurrLocRow][playerCurrLocCol] != 'P'){
             hiddenBoard[playerCurrLocRow][playerCurrLocCol] = Player;
+            }
             }
             else{
                 cout<<endl<<"You cannot select from further upwards"<<endl;
@@ -264,14 +280,42 @@ void PlayerControls(char**& hiddenBoard, int side, char movement, char Player, c
         case 's':
             //temp = board[playerCurrLocRow+1][playerCurrLocCol];
             if (playerCurrLocRow < side - 1){
-            hiddenBoard[playerCurrLocRow][playerCurrLocCol] = fill_char2;
+                if (hiddenBoard[playerCurrLocRow][playerCurrLocCol] != 'P'){
+                hiddenBoard[playerCurrLocRow][playerCurrLocCol] = fill_char2;
+                }
             playerCurrLocRow += 1;
+            if (hiddenBoard[playerCurrLocRow][playerCurrLocCol] != 'P'){
             hiddenBoard[playerCurrLocRow][playerCurrLocCol] = Player;
+            }
             }
             else{
                 cout<<endl<<"You cannot select from further downwards"<<endl;
             }
 
+            break;
+        case 'p':
+            flag = 1;
+            hiddenBoard[playerCurrLocRow][playerCurrLocCol] = 'P';
+            if (board[playerCurrLocRow][playerCurrLocCol] == '*'){
+            minesFlag += 1;
+            }
+
+            if ((playerCurrLocRow < side - 1) && hiddenBoard[playerCurrLocRow + 1][playerCurrLocCol] != 'P'){
+            playerCurrLocRow += 1;
+            hiddenBoard[playerCurrLocRow][playerCurrLocCol] = Player;
+            }
+            else if((playerCurrLocRow > 1) && hiddenBoard[playerCurrLocRow - 1][playerCurrLocCol] != 'P'){
+            playerCurrLocRow -= 1;
+            hiddenBoard[playerCurrLocRow][playerCurrLocCol] = Player;
+            }
+            else if((playerCurrLocCol < side - 1) && hiddenBoard[playerCurrLocRow][playerCurrLocCol + 1] != 'P'){
+            playerCurrLocCol += 1;
+            hiddenBoard[playerCurrLocRow][playerCurrLocCol] = Player;
+            }
+            else if ((playerCurrLocCol > 1) && hiddenBoard[playerCurrLocRow][playerCurrLocCol - 1] != 'P'){
+            playerCurrLocCol -= 1;
+            hiddenBoard[playerCurrLocRow][playerCurrLocCol] = Player;
+            }
             break;
         default:
             cout<<"Use w,a,s,d to move around."<<endl<<"'q' to quit";
@@ -282,6 +326,11 @@ void PlayerControls(char**& hiddenBoard, int side, char movement, char Player, c
     //return board;
 }
 
+void Statistics(int numMines, int minesFlag){
+    if(minesFlag == numMines){
+        cout<<endl<<"You have flagged all mines! You WIN!"<<endl;
+    }
+}
 
 
 //The main pipeline for the flow of game
@@ -290,7 +339,9 @@ char theGame(){
     int playerCurrLocCol;
     int hiddenPlayerCurrLocRow;
     int hiddenPlayerCurrLocCol;
-    int diff;
+    int numMines = 0;
+    bool flag = 0;
+    int minesFlag = 0;
     int side = 0;
     int mineNum = 0;
     chooseDiff(side, mineNum);
@@ -305,12 +356,12 @@ char theGame(){
     for (int var = 0; var < side; ++var) {
         hiddenBoard[var] = new char [side];
     }
-    int px = rand()%(8) + 1;
-    int py = rand()%(8) + 1;
+    int px = rand()%(5) + 3;
+    int py = rand()%(5) + 3;
     hiddenBoard[px][py] = Player;
     hiddenPlayerCurrLocRow = px;
     hiddenPlayerCurrLocCol = py;
-    char fill_char2 = 'X';
+    char fill_char2 = 'L';
 
 
 
@@ -322,23 +373,23 @@ char theGame(){
 
 
            mineGen(side, board, mineNum);
-           numGen(side, board);
+           numGen(side, board, numMines);
            displayBoard(side, board, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
            cout<<endl<<endl;
-           hiddenDisplayBoard(side, hiddenBoard, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol, fill_char2);
+           hiddenDisplayBoard(side, flag, hiddenBoard, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol, fill_char2);
 
            cout<<endl<<"Use w,a,s,d to move around."<<endl<<"'q' to quit"<<endl;
 
            while (movement != 'q'){
             movement = _getch();
-
-            //cin>>movement;
-            PlayerControls(hiddenBoard, side, movement, Player, fill_char2, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
+            PlayerControls(hiddenBoard, board, minesFlag, flag, side, movement, Player, fill_char2, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
             system("CLS");
             displayBoard(side, board, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
             cout<<endl<<"w, a, s, d to move around and q to quit"<<endl;
-            hiddenDisplayBoard(side, hiddenBoard, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol, fill_char2);
+            hiddenDisplayBoard(side, flag, hiddenBoard, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol, fill_char2);
+
             cout<<endl<<"Your Current Location: ("<<hiddenPlayerCurrLocRow<<", "<<hiddenPlayerCurrLocCol<<")"<<endl;
+            Statistics(numMines, minesFlag);
             }
 
         }
