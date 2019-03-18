@@ -21,7 +21,7 @@ using namespace std;
  * - Piyush Ranjan Sahu - sahupr@mail.uc.edu
  *
  * Special Instructions:
- * 1. The could sometimes crash due to memory accessing issues.
+ * 1. The game could sometimes crash due to memory accessing issues.
  *
  *
  * Developer comments:
