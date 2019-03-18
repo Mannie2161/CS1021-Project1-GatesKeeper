@@ -13,9 +13,9 @@ void chooseDiff(int& side, int& mineNum){
     int selection;
     char board[side][side];
     vector<int>Props(2);
-    cout<<"Choose Difficulty: "<<endl<<"1. Easy"<<endl<<"2. Hard"<<endl<<"3. Nightmare"<<endl;
+    cout<<"Choose Difficulty: "<<endl<<"1. Easy"<<endl<<"2. Hard"<<endl<<"3. Nightmare"<<endl<<"4. Custom"<<endl;
     cin>>selection;
-    while (selection < 1 || selection > 3){
+    while (selection < 1 || selection > 4){
         cout<<"Please select a valid option."<<endl;
         cin>>selection;
     }
@@ -33,6 +33,24 @@ void chooseDiff(int& side, int& mineNum){
         side = 25;
         mineNum = 99;
         break;
+    case 4:
+        cout<<endl<<"Please enter the SIDE (at least 5) : ";
+        cin>>side;
+        cout<<endl<<"Please enter the number of MINES (at least 3): ";
+        cin>>mineNum;
+        if (side < 5){
+        while (side < 5){
+            cout<<endl<<"Please enter a valid SIDE (at least 5) : ";
+            cin>>side;
+           }
+        }
+        if (mineNum < 3 || mineNum > (side*side) - side){
+            cout<<endl<<"Please enter a valid number of MINES (at least 3): ";
+            cin>>mineNum;
+        }
+        side += 1;
+
+
     }
 
     Props.at(0) = side;
@@ -225,11 +243,13 @@ void numGen(int side, char**& board, int& numMines){
         }
     }
 }
-void onClick(char**& hiddenBoard, char**& board, int side, int playerCurrLocRow, int playerCurrLocCol){
+void onClick(char**& hiddenBoard, char**& board,bool& lost, int side, int playerCurrLocRow, int playerCurrLocCol){
     int tempRow = playerCurrLocRow;
+    int tempItrRow = tempRow;
     int tempCol = playerCurrLocCol;
+    int tempItrCol = tempCol;
     if(board[playerCurrLocRow][playerCurrLocCol] == '*'){
-        cout<<endl<<"You Lose!"<<endl;
+        lost = 1;
     }
     else if(board[playerCurrLocRow][playerCurrLocCol] < '9' && board[playerCurrLocRow][playerCurrLocCol] > '0'){
         hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
@@ -239,109 +259,163 @@ void onClick(char**& hiddenBoard, char**& board, int side, int playerCurrLocRow,
         while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
             while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
                 playerCurrLocRow -= 1;
+                if (playerCurrLocRow > 0 && playerCurrLocRow < side){
                 hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
             }
             playerCurrLocRow = tempRow;
             while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
                 playerCurrLocRow += 1;
+                if (playerCurrLocRow > 0 && playerCurrLocRow < side){
                 hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
             }
             playerCurrLocRow = tempRow;
             while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
                 playerCurrLocCol -= 1;
+                if (playerCurrLocCol > 0 && playerCurrLocCol < side){
                 hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
             }
             playerCurrLocCol = tempCol;
             while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
                 playerCurrLocCol += 1;
+                if (playerCurrLocCol > 0 && playerCurrLocCol < side){
                 hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
             }
-            playerCurrLocRow -= 1;
-            playerCurrLocRow -= 1;
+            tempItrRow -= 1;
+            tempItrCol -= 1;
+            playerCurrLocRow = tempItrRow;
+            playerCurrLocCol = tempItrCol;
+            if (board[playerCurrLocRow][playerCurrLocCol] == '*'){
+                break;
+            }
+            //playerCurrLocRow -= 1;
+            //playerCurrLocCol -= 1;
         }
-        playerCurrLocRow = tempRow;
-        playerCurrLocCol = tempCol;
-        /*while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
-            while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
-                playerCurrLocRow -= 1;
-                hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
-            }
-            playerCurrLocRow = tempRow;
-            while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
-                playerCurrLocRow += 1;
-                hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
-            }
-            playerCurrLocRow = tempRow;
-            while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
-                playerCurrLocCol -= 1;
-                hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
-            }
-            playerCurrLocCol = tempCol;
-            while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
-                playerCurrLocCol += 1;
-                hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
-            }
-            playerCurrLocRow += 1;
-            playerCurrLocRow += 1;
-        }
-        playerCurrLocRow = tempRow;
-        playerCurrLocCol = tempCol;
+        tempItrRow = tempRow;
+        tempItrCol = tempCol;
         while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
             while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
                 playerCurrLocRow -= 1;
+                if (playerCurrLocRow > 0 && playerCurrLocRow < side){
                 hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
             }
             playerCurrLocRow = tempRow;
             while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
                 playerCurrLocRow += 1;
+                if (playerCurrLocRow > 0 && playerCurrLocRow < side){
                 hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
             }
             playerCurrLocRow = tempRow;
             while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
                 playerCurrLocCol -= 1;
+                if (playerCurrLocRow > 0 && playerCurrLocRow < side){
                 hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
             }
             playerCurrLocCol = tempCol;
             while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
                 playerCurrLocCol += 1;
+                if (playerCurrLocRow > 0 && playerCurrLocRow < side){
                 hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
             }
-            playerCurrLocRow -= 1;
-            playerCurrLocRow += 1;
+            tempItrRow += 1;
+            tempItrCol += 1;
+            playerCurrLocRow = tempItrRow;
+            playerCurrLocCol = tempItrCol;
+            if (board[playerCurrLocRow][playerCurrLocCol] == '*'){
+                break;
+            }
         }
-        playerCurrLocRow = tempRow;
-        playerCurrLocCol = tempCol;
+        tempItrRow = tempRow;
+        tempItrCol = tempCol;
         while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
             while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
                 playerCurrLocRow -= 1;
+                if (playerCurrLocRow > 0 && playerCurrLocRow < side){
                 hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
             }
             playerCurrLocRow = tempRow;
             while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
                 playerCurrLocRow += 1;
+                if (playerCurrLocRow > 0 && playerCurrLocRow < side){
                 hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
             }
             playerCurrLocRow = tempRow;
             while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
                 playerCurrLocCol -= 1;
+                if (playerCurrLocRow > 0 && playerCurrLocRow < side){
                 hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
             }
             playerCurrLocCol = tempCol;
             while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
                 playerCurrLocCol += 1;
+                if (playerCurrLocRow > 0 && playerCurrLocRow < side){
                 hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
             }
-            playerCurrLocRow += 1;
-            playerCurrLocRow -= 1;
+            tempItrRow += 1;
+            tempItrCol -= 1;
+            playerCurrLocRow = tempItrRow;
+            playerCurrLocCol = tempItrCol;
+            if (board[playerCurrLocRow][playerCurrLocCol] == '*'){
+                break;
+            }
         }
-        playerCurrLocRow = tempRow;
-        playerCurrLocCol = tempCol;*/
+        tempItrRow = tempRow;
+        tempItrCol = tempCol;
+        while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
+            while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
+                playerCurrLocRow -= 1;
+                if (playerCurrLocRow > 0 && playerCurrLocRow < side){
+                hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
+            }
+            playerCurrLocRow = tempRow;
+            while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
+                playerCurrLocRow += 1;
+                if (playerCurrLocRow > 0 && playerCurrLocRow < side){
+                hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
+            }
+            playerCurrLocRow = tempRow;
+            while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
+                playerCurrLocCol -= 1;
+                if (playerCurrLocRow > 0 && playerCurrLocRow < side){
+                hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
+            }
+            playerCurrLocCol = tempCol;
+            while((board[playerCurrLocRow][playerCurrLocCol] != '*')&&(playerCurrLocCol > 0)&&(playerCurrLocRow > 0)&&(playerCurrLocCol < side) && (playerCurrLocRow < side)){
+                playerCurrLocCol += 1;
+                if (playerCurrLocRow > 0 && playerCurrLocRow < side){
+                hiddenBoard[playerCurrLocRow][playerCurrLocCol] = board[playerCurrLocRow][playerCurrLocCol];
+                }
+            }
+            tempItrRow -= 1;
+            tempItrCol += 1;
+            playerCurrLocRow = tempItrRow;
+            playerCurrLocCol = tempItrCol;
+            if (board[playerCurrLocRow][playerCurrLocCol] == '*'){
+                break;
+            }
+        }
+        tempItrRow = tempRow;
+        tempItrCol = tempCol;
     }
 }
 
 
 //User interface to navigate around the given space
-void PlayerControls(char**& hiddenBoard, char**& board, int& minesFlag, int& numFlags, bool& flag, int side, char& movement, char Player, char fill_char2, int& playerCurrLocRow, int& playerCurrLocCol){
+void PlayerControls(char**& hiddenBoard, char**& board, int& minesFlag, int& numFlags, bool& flag, bool& lost, int side, char& movement, char Player, char fill_char2, int& playerCurrLocRow, int& playerCurrLocCol){
         //char temp;
         switch (movement){
 
@@ -448,7 +522,7 @@ void PlayerControls(char**& hiddenBoard, char**& board, int& minesFlag, int& num
             }
             break;
         case 'o':
-            onClick(hiddenBoard, board, side, playerCurrLocRow, playerCurrLocCol);
+            onClick(hiddenBoard, board, lost, side, playerCurrLocRow, playerCurrLocCol);
             if ((playerCurrLocRow < side - 1) && hiddenBoard[playerCurrLocRow + 1][playerCurrLocCol] != 'P' && !(hiddenBoard[playerCurrLocRow + 1][playerCurrLocCol] >= '0' && hiddenBoard[playerCurrLocRow + 1][playerCurrLocCol] < '9' )){
             playerCurrLocRow += 1;
             hiddenBoard[playerCurrLocRow][playerCurrLocCol] = Player;
@@ -466,6 +540,9 @@ void PlayerControls(char**& hiddenBoard, char**& board, int& minesFlag, int& num
             hiddenBoard[playerCurrLocRow][playerCurrLocCol] = Player;
             }
             break;
+        case 'q':
+            movement = 'q';
+            break;
         default:
             cout<<"Use w,a,s,d to move around."<<endl<<"'q' to quit";
             break;
@@ -475,9 +552,15 @@ void PlayerControls(char**& hiddenBoard, char**& board, int& minesFlag, int& num
     //return board;
 }
 
-void Statistics(int numMines, int minesFlag, int numFlags){
+void Statistics(int numMines, int minesFlag, int numFlags, bool lost, bool& won, char& movement){
     if(minesFlag == numMines && numFlags == minesFlag){
+        won = 1;
+        movement = 'q';
         cout<<endl<<"You have flagged all mines! You WIN!"<<endl;
+    }
+    else if(lost == 1){
+        movement = 'q';
+        cout<<endl<<"You Lose!"<<endl<<"!!GAME OVER!!"<<endl;
     }
 }
 
@@ -490,6 +573,8 @@ char theGame(){
     int hiddenPlayerCurrLocCol;
     int numMines = 0;
     bool flag = 0;
+    bool won = 0;
+    bool lost = 0;
     int minesFlag = 0;
     int numFlags = 0;
     int side = 0;
@@ -532,14 +617,14 @@ char theGame(){
 
            while (movement != 'q'){
             movement = _getch();
-            PlayerControls(hiddenBoard, board, minesFlag, numFlags, flag, side, movement, Player, fill_char2, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
+            PlayerControls(hiddenBoard, board, minesFlag, numFlags, flag, lost, side, movement, Player, fill_char2, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
             system("CLS");
             displayBoard(side, board, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
-            cout<<endl<<"w, a, s, d to move around and q to quit"<<endl;
+            cout<<endl<<"w, a, s, d to move around"<<endl<<endl<<"o to select the block, p to flag"<<endl<<endl<<"q to quit";
             hiddenDisplayBoard(side, flag, hiddenBoard, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol, fill_char2);
 
             cout<<endl<<"Your Current Location: ("<<hiddenPlayerCurrLocRow<<", "<<hiddenPlayerCurrLocCol<<")"<<endl;
-            Statistics(numMines, minesFlag, numFlags);
+            Statistics(numMines, minesFlag, numFlags, lost, won, movement);
             }
 
         }
@@ -551,8 +636,9 @@ char theGame(){
 
 //Displays the game menu having interactable options
 void gameMenu(){
-
+    char movement;
     int userInput = 0;
+    int itr = 0;
     cout<<"1. START GAME"<<endl<<"2. INFO"<<endl<<"3. CREDITS"<<endl<<"4. Quit"<<endl<<endl;
     //char movement = theGame();
 
@@ -567,62 +653,24 @@ void gameMenu(){
             cout<<"CREDITS:"<<endl<<endl<<"Made by Manvith Krishna Kandukuri"<<endl
                <<"Courtesy of Department of EECS University of Cincinnati."<<endl<<endl;
         }
+        else if (movement == 'q'){
+            userInput = 4;
+            break;
+        }
         else if (userInput == 1){
             theGame();
-            /*if(movement == 'q'){
-                userInput = 4;
-            }*/
+            movement = theGame();
+
         }
+        ++itr;
     }
 
 }
 
-/*
-void mineGen(int diff, int& mx, int& my){
 
-
-}
-
-void mineGenerator_easy() {
-    int mx = rand()%10;
-    int my = rand()%10;
-}
-
-void mineGenerator_medium() {
-    int mx = rand()%40;
-    int my = rand()%40;
-}
-
-void mineGenerator_hard() {
-    int mx = rand()%99;
-    int my = rand()%99;
-}
-
-
-void minePlacer(char board[Row][Col], int num) {
-    for(int i=0;i<Row;i++) {
-        for(int j=0;j<Col;j++) {
-            board[i][j] = rand()%10;
-        }
-    }
-    for(int i=0;i<Row;i++) {
-        for(int j=0;j<Col;j++) {
-            cout<<board[i][j];
-        }
-    }
-}
-*/
 int main()
 {
     srand(time(NULL));
-
     gameMenu();
-    int diff;
-    int mx;
-    int my;
-    char num;
-
-
-    //displayBoard(board);
     return 0;
 }
