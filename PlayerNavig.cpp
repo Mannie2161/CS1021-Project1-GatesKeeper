@@ -146,7 +146,7 @@ char** hiddenDisplayBoard( int side, bool& flag, char**& hiddenBoard, char Playe
                  else if (hiddenBoard[r][c] == Player){
                      cout<<hiddenBoard[r][c]<<"  ";
                  }
-                 else  if(flag == 1 && hiddenBoard[r][c] == 'P'){
+                 else  if(/*flag == 1 &&*/ hiddenBoard[r][c] == 'P'){
                      cout<<hiddenBoard[r][c]<<"  ";
                  }
 
@@ -556,19 +556,17 @@ void Statistics(int numMines, int minesFlag, int numFlags, bool lost, bool& won,
     if(minesFlag == numMines && numFlags == minesFlag){
         won = 1;
         movement = 'q';
-        cout<<endl<<"You have flagged all mines! You WIN!"<<endl;
+        cout<<endl<<"You have flagged all mines! You WIN!"<<endl<<endl;
     }
     else if(lost == 1){
         movement = 'q';
-        cout<<endl<<"You Lose!"<<endl<<"!!GAME OVER!!"<<endl;
+        cout<<endl<<"You Lose!"<<endl<<"!!GAME OVER!!"<<endl<<endl;
     }
 }
 
 
 //The main pipeline for the flow of game
 char theGame(){
-    int playerCurrLocRow;
-    int playerCurrLocCol;
     int hiddenPlayerCurrLocRow;
     int hiddenPlayerCurrLocCol;
     int numMines = 0;
@@ -591,8 +589,8 @@ char theGame(){
     for (int var = 0; var < side; ++var) {
         hiddenBoard[var] = new char [side];
     }
-    int px = rand()%(5) + 3;
-    int py = rand()%(5) + 3;
+    int px = 1;
+    int py = 1;
     hiddenBoard[px][py] = Player;
     hiddenPlayerCurrLocRow = px;
     hiddenPlayerCurrLocCol = py;
@@ -620,7 +618,7 @@ char theGame(){
             PlayerControls(hiddenBoard, board, minesFlag, numFlags, flag, lost, side, movement, Player, fill_char2, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
             system("CLS");
             displayBoard(side, board, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
-            cout<<endl<<"w, a, s, d to move around"<<endl<<endl<<"o to select the block, p to flag"<<endl<<endl<<"q to quit";
+            cout<<endl<<"w, a, s, d to move around"<<endl<<endl<<"o to select the block, p to flag and unflag"<<endl<<endl<<"q to quit"<<endl<<endl;
             hiddenDisplayBoard(side, flag, hiddenBoard, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol, fill_char2);
 
             cout<<endl<<"Your Current Location: ("<<hiddenPlayerCurrLocRow<<", "<<hiddenPlayerCurrLocCol<<")"<<endl;
@@ -636,31 +634,42 @@ char theGame(){
 
 //Displays the game menu having interactable options
 void gameMenu(){
-    char movement;
     int userInput = 0;
     int itr = 0;
-    cout<<"1. START GAME"<<endl<<"2. INFO"<<endl<<"3. CREDITS"<<endl<<"4. Quit"<<endl<<endl;
+    int endgame = 0;
+    cout<<"[[[[[[GATESKEEPER]]]]]]"<<endl<<endl;
+    cout<<"1. START GAME"<<endl<<"2. INFO"<<endl<<"3. CREDITS"<<endl<<"4. CONTROLS"<<endl<<"5. QUIT"<<endl<<endl;
     //char movement = theGame();
 
-    while (userInput != 4){
+    while (userInput != 5){
         cin>>userInput;
+
         cout<<endl;
         if (userInput == 2){
-            cout<<endl<<" "<<endl<<endl;
+            cout<<endl<<"GATESKEEPER inspired by The Original Minesweeper game"<<endl<<endl;
 
         }
         else if (userInput == 3){
             cout<<"CREDITS:"<<endl<<endl<<"Made by Manvith Krishna Kandukuri"<<endl
                <<"Courtesy of Department of EECS University of Cincinnati."<<endl<<endl;
         }
-        else if (movement == 'q'){
-            userInput = 4;
-            break;
+        else if (userInput == 4){
+            cout<<"'w', 'a', 's', 'd' to move around"<<endl<<endl<<"'o' to select the block, 'p' to flag and unflag"<<endl<<endl;
         }
         else if (userInput == 1){
             theGame();
-            movement = theGame();
-
+            cout<<endl<<"1. Play Again"<<endl<<"2. Quit"<<endl;
+            cin>>endgame;
+            while (endgame < 1 || endgame > 2){
+                cout<<"Please select a valid option.";
+                cin>>endgame;
+            }
+            if (endgame == 2){
+                userInput = 5;
+            }
+            else if (endgame == 1){
+                cout<<"Enter '1' to start game: ";
+            }
         }
         ++itr;
     }
