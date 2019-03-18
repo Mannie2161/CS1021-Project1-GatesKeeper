@@ -646,7 +646,7 @@ void gameMenu(){
 
         cout<<endl;
         if (userInput == 2){
-            cout<<endl<<"GATESKEEPER inspired by The Original Minesweeper game"<<endl<<endl;
+            cout<<endl<<"GATESKEEPER inspired by The Original Minesweeper game"<<endl<<"Made by Manvith Krishna Kandukuri and Piyush Ranjan Sahu"<<endl<<endl;
 
         }
         else if (userInput == 3){
