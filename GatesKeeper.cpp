@@ -607,7 +607,7 @@ char theGame(){
 
            mineGen(side, board, mineNum);
            numGen(side, board, numMines);
-           displayBoard(side, board, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
+           //displayBoard(side, board, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
            cout<<endl<<endl;
            hiddenDisplayBoard(side, flag, hiddenBoard, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol, fill_char2);
 
@@ -617,7 +617,7 @@ char theGame(){
             movement = _getch();
             PlayerControls(hiddenBoard, board, minesFlag, numFlags, flag, lost, side, movement, Player, fill_char2, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
             system("CLS");
-            displayBoard(side, board, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
+            //displayBoard(side, board, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
             cout<<endl<<"w, a, s, d to move around"<<endl<<endl<<"o to select the block, p to flag and unflag"<<endl<<endl<<"q to quit"<<endl<<endl;
             hiddenDisplayBoard(side, flag, hiddenBoard, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol, fill_char2);
 
