@@ -8,7 +8,7 @@
 using namespace std;
 
 
-//Initializes the board
+//Choose a difficulty setting
 void chooseDiff(int& side, int& mineNum){
     int selection;
     char board[side][side];
@@ -58,10 +58,11 @@ void chooseDiff(int& side, int& mineNum){
     Props.at(1) = mineNum;
     mineNum = const_cast<int&>(mineNum);
 
-    board[side][side];
+
 
  }
 
+//Initializing the board
 char** initBoard( int side, char**& board, char fill_char2 ){
 
     for(int r = 0; r < side; r++) {
@@ -113,6 +114,7 @@ char** displayBoard( int side, char**& board, char Player, int& playerCurrLocRow
         }
  return board;
 }
+
 //Displays the board with limited game objects
 char** hiddenDisplayBoard( int side, bool& flag, char**& hiddenBoard, char Player, int& hiddenPlayerCurrLocRow, int& hiddenPlayerCurrLocCol, char fill_char2){
     int fillNumCol = 0;
@@ -167,7 +169,7 @@ char** hiddenDisplayBoard( int side, bool& flag, char**& hiddenBoard, char Playe
 }
 
 
-//Generates random locations for the game objects
+//Generates random locations for the mine objects
 void mineGen(int side, char**& board, int mineNum){
     int mx, my;
     cout<<endl<<endl<<mineNum<<endl<<endl;
@@ -201,6 +203,7 @@ void mineGen(int side, char**& board, int mineNum){
     //return board;
 }
 
+//Generating numbers on the board
 void numGen(int side, char**& board, int& numMines){
     for (int i = 1; i < side; ++i) {
         for (int j = 1; j < side; ++j) {
@@ -243,6 +246,8 @@ void numGen(int side, char**& board, int& numMines){
         }
     }
 }
+
+//The click event reaction
 void onClick(char**& hiddenBoard, char**& board,bool& lost, int side, int playerCurrLocRow, int playerCurrLocCol){
     int tempRow = playerCurrLocRow;
     int tempItrRow = tempRow;
@@ -552,6 +557,7 @@ void PlayerControls(char**& hiddenBoard, char**& board, int& minesFlag, int& num
     //return board;
 }
 
+//Statistics of the game
 void Statistics(int numMines, int minesFlag, int numFlags, bool lost, bool& won, char& movement){
     cout<<endl<<"Total number of mines: "<<numMines<<endl<<endl;
     if(minesFlag == numMines && numFlags == minesFlag){
@@ -581,7 +587,7 @@ char theGame(){
     chooseDiff(side, mineNum);
 
     char Player = '_';
-    vector<int>Props(2);
+
     char** board = new char*[side];
     for (int var = 0; var < side; ++var) {
         board[var] = new char [side];
@@ -624,6 +630,9 @@ char theGame(){
 
             cout<<endl<<"Your Current Location: ("<<hiddenPlayerCurrLocRow<<", "<<hiddenPlayerCurrLocCol<<")"<<endl;
             Statistics(numMines, minesFlag, numFlags, lost, won, movement);
+            if (lost == 1){
+            displayBoard(side, board, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
+            }
             }
 
         }
@@ -677,7 +686,7 @@ void gameMenu(){
 
 }
 
-
+//The Program gets executed
 int main()
 {
     srand(time(NULL));
