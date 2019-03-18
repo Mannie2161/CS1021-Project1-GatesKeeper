@@ -7,6 +7,33 @@
 
 using namespace std;
 
+/*
+ * Project Title:
+ * - GATESKEEPER
+ * Description: (should be a few sentences)
+ * This program does is a game that is similar to the original Minesweeper game.
+ * Users will the have the options to choose a preset for board size and number of mines or
+ * make their own.
+ * Players should flag all the mines on the board with no extra flags in order to win.
+ *
+ * Developers:
+ * - Manvith Krishna Kandukuri - kandukma@mail.uc.edu
+ * - Piyush Ranjan Sahu - sahupr@mail.uc.edu
+ *
+ * Special Instructions:
+ * 1. The could sometimes crash due to memory accessing issues.
+ *
+ *
+ * Developer comments:
+ *
+ * Manvith Krishna Kandukuri:
+ * Developed user interface and the game logic. Learned vectors would be a better option for next time.
+ *
+ * Piyush Ranjan Sahu:
+ * Developed the flow of the game and actively debugged the code. Learned pointers could sometimes
+ * be an issue if not used in a right way.
+ */
+
 
 //Choose a difficulty setting
 void chooseDiff(int& side, int& mineNum){
@@ -22,16 +49,16 @@ void chooseDiff(int& side, int& mineNum){
 
     switch (selection){
     case 1:
-        side = 10;
-        mineNum = 10;
+        side = 14;
+        mineNum = 28;
         break;
     case 2:
-        side = 17;
-        mineNum = 40;
+        side = 27;
+        mineNum = 55;
         break;
     case 3:
-        side = 25;
-        mineNum = 99;
+        side = 40;
+        mineNum = 143;
         break;
     case 4:
         cout<<endl<<"Please enter the SIDE (at least 5) : ";
@@ -606,7 +633,7 @@ char theGame(){
 
 
 
-    char movement = 'v'; //FIXME initialization
+    char movement = 'v';
     while ((movement != 'q')){
 
            initBoard(side, board, fill_char2);
@@ -624,6 +651,8 @@ char theGame(){
             movement = _getch();
             PlayerControls(hiddenBoard, board, minesFlag, numFlags, flag, lost, side, movement, Player, fill_char2, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
             system("CLS");
+
+            //CHEAT MINESWEEPER
             //displayBoard(side, board, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol);
             cout<<endl<<"w, a, s, d to move around"<<endl<<endl<<"o to select the block, p to flag and unflag"<<endl<<endl<<"q to quit"<<endl<<endl;
             hiddenDisplayBoard(side, flag, hiddenBoard, Player, hiddenPlayerCurrLocRow, hiddenPlayerCurrLocCol, fill_char2);
