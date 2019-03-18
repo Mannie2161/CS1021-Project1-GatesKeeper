@@ -553,6 +553,7 @@ void PlayerControls(char**& hiddenBoard, char**& board, int& minesFlag, int& num
 }
 
 void Statistics(int numMines, int minesFlag, int numFlags, bool lost, bool& won, char& movement){
+    cout<<endl<<"Total number of mines: "<<numMines<<endl<<endl;
     if(minesFlag == numMines && numFlags == minesFlag){
         won = 1;
         movement = 'q';
